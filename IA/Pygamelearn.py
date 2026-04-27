@@ -35,6 +35,7 @@ movenum = 5
 enemymovenum = 10
 turnnum = 0
 
+
 player = pygame.Rect(500, 250, 50, 50)
 gui = pygame.Rect(0, 600, 800, 200)
 topgui = pygame.Rect(0, 0, 800, 100)
@@ -149,6 +150,7 @@ run = True
 while run:
     movenumdisplay = font.render(str(movenum), True, (255,0,0))
     turnnumdisplay = font.render(str(turnnum), True, (255,0,0))
+    mouse_pos = pygame.mouse.get_pos()
 
     screen.fill(BLACK)
     playerCollide()
@@ -160,22 +162,26 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if playerturn:
+        if playerturn:  
     
             if event.type == pygame.KEYDOWN:
                 if movenum > 0:
-                    if event.key == pygame.K_a and playerleft:
-                        player.move_ip(-move_dist, 0)
-                        movenum -= 1
-                    if event.key == pygame.K_d and playerdown:
-                        player.move_ip(move_dist, 0)
-                        movenum -= 1
-                    if event.key == pygame.K_w and playerup:
-                        player.move_ip(0, -move_dist)
-                        movenum -= 1
-                    if event.key == pygame.K_s and playerright:
-                        player.move_ip(0, move_dist)
-                        movenum -= 1
+                    if event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                        if playerleft:
+                            player.move_ip(-move_dist, 0)
+                            movenum -= 1
+                    if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                        if playerdown:
+                            player.move_ip(move_dist, 0)
+                            movenum -= 1
+                    if event.key == pygame.K_w or event.key == pygame.K_UP:
+                        if playerup:
+                            player.move_ip(0, -move_dist)
+                            movenum -= 1
+                    if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                        if playerright:
+                            player.move_ip(0, move_dist)
+                            movenum -= 1
             if event.type == pygame.MOUSEBUTTONDOWN and endturngui.collidepoint(event.pos):
                 if event.button == 1:
                     playerturn = False
@@ -190,6 +196,8 @@ while run:
             turnnum += 1
     if player.colliderect(enemy):
         screen.blit(uwintext, (400,400))
+    
+        
 
     player.clamp_ip(boundary)
     enemy.clamp_ip(boundary)
@@ -202,12 +210,22 @@ while run:
     pygame.draw.rect(screen, (159, 161, 159), movegui)
     pygame.draw.rect(screen, (159, 161, 159), attackgui)
     pygame.draw.rect(screen, (159, 161, 159), endturngui)
+    if endturngui.collidepoint(mouse_pos):
+        pygame.draw.rect(screen, (200, 200, 200), endturngui)
+
+    if movegui.collidepoint(mouse_pos):
+        pygame.draw.rect(screen, (200, 200, 200), movegui)
+
+    if attackgui.collidepoint(mouse_pos):
+        pygame.draw.rect(screen, (200, 200, 200), attackgui)
     screen.blit(movetext, (75,685))
     screen.blit(movenumdisplay, (195,689))
     screen.blit(attacktext, (350,685))
     screen.blit(endturntext, (580,685))
     screen.blit(turntext, (25,35))
     screen.blit(turnnumdisplay, (125,35))
+    
+    
     
 
     pygame.display.update()
